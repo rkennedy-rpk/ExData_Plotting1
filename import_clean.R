@@ -8,4 +8,10 @@ download.file(URL,
               method = "curl")
 unzip("electric_power_consumption.zip")              
 consumption <- read.csv("household_power_consumption.txt", sep = ";")
+consumption$Date <- lubridate::dmy(consumption$Date)
 
+
+plotting <- consumption %>% 
+        filter(Date == "2007-02-01" | Date == "2007-02-02")
+plotting$Time <- lubridate::hms(plotting$Time) #this might not have been the right call
+str(plotting$Time)
