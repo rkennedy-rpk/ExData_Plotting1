@@ -24,9 +24,16 @@ plotting[ , chars] <- as.data.frame(apply(plotting[ , chars], 2, as.numeric))
 rm(consumption)
 
 #save plot as PNG
-png(filename = "plot2.png")
-with(plotting, plot(Global_active_power~DateTime,
+png(filename = "plot3.png")
+with(plotting, plot(Sub_metering_1~DateTime,
                     type = "l",
-                    main = "Global Active Power",
-                    ylab = "Global Active Power (Kilowatts)"))
+                    ylab = "Energy sub metering"))
+with(plotting, points(Sub_metering_2~DateTime,
+                    type = "l",
+                    col = "red"))
+with(plotting, points(Sub_metering_3~DateTime,
+                      type = "l",
+                      col = "blue"))
+legend("topright", lty = 1, col = c("black", "red", "blue"), 
+       legend = c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"))
 dev.off()
