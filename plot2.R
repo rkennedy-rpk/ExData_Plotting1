@@ -13,13 +13,17 @@ consumption <- read.csv("household_power_consumption.txt", sep = ";", stringsAsF
 consumption$Date <- lubridate::dmy(consumption$Date)
 plotting <- consumption %>% 
         filter(Date == "2007-02-01" | Date == "2007-02-02")
-plotting$Time <- hms(plotting$Time) #this might not have been the right call
+
+plotting <- plotting %>% 
+        mutate(DateTime = paste(Date, Time)) 
+plotting$DateTime <- strptime(plotting$DateTime, "%Y-%m-%d %H:%M:%S")
+??lubridate
 chars <- sapply(plotting, is.character)
 plotting[ , chars] <- as.data.frame(apply(plotting[ , chars], 2, as.numeric))
 rm(consumption)
 
 #save plot as PNG
 png(filename = "plot1.png")
-hist(plotting$Global_active_power, col = "red", main = "Global Active Power",
-     xlab = "Global Active Power (Kilowatts)")
+plot(plotting$Global_active_power~plotting$Time, col = "red", main = "Global Active Power",
+     xlab = plotting$Date, ylab = "Global Active Power (Kilowatts)")
 dev.off()
