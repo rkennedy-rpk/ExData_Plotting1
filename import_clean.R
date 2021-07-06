@@ -7,11 +7,17 @@ download.file(URL,
               destfile = here("electric_power_consumption.zip"), 
               method = "curl")
 unzip("electric_power_consumption.zip")              
-consumption <- read.csv("household_power_consumption.txt", sep = ";")
+consumption <- read.csv("household_power_consumption.txt", sep = ";", stringsAsFactors = F)
 consumption$Date <- lubridate::dmy(consumption$Date)
 
 
 plotting <- consumption %>% 
         filter(Date == "2007-02-01" | Date == "2007-02-02")
-plotting$Time <- lubridate::hms(plotting$Time) #this might not have been the right call
-str(plotting$Time)
+plotting$Time <- hms(plotting$Time) #this might not have been the right call
+chars <- sapply(plotting, is.character)
+plotting[ , chars] <- as.data.frame(apply(plotting[ , chars], 2, as.numeric))
+rm(consumption)
+
+hist(plotting$Global_active_power, col = "red", main = "Global Active Power",
+     xlab = "Global Active Power (Kilowatts)")
+
